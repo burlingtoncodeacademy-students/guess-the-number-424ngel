@@ -23,12 +23,14 @@ async function start() {
   }
 
   console.log('You entered: ' + secretNumber);
-  
+
+  // Initialize
   let min = 0
   let max = 100
   let win = false
   let cheating = false
   let guessCount = 0
+  // ---------------------------------------------------------------------------------------------------------------
   
   while (guessCount < 7) { // Computer will only guess 7 times
     let guess = Math.floor((min + max) / 2) // Binary Search
