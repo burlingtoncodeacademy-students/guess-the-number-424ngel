@@ -56,78 +56,93 @@ function isValidNumber(input) { // Check if user entered a valid number within t
 async function start() {
   // Intro
   console.log("\nLet's play a game where you (human) make up a number and I (computer) try to guess it.")
-  let secretNumber = await ask("What is your secret number (0-100)?\nI won't peek, I promise...\n");
   
-  // Check if user entered a valid number
-    while(true) {
-      if (isValidNumber(secretNumber)) {
-        break
-      }
-
-      secretNumber = await ask("Please enter a number (0-100): ")
-    }
-  // ---------------------------------------------------------------------------------------------------------------
-  console.log('You entered: ' + secretNumber);
-
-  // Initialize
-  let min = 0
-  let max = 100
-  let guessCount = 0
-  let isWin = false
-  // ---------------------------------------------------------------------------------------------------------------
-  
-  while (guessCount < 7) { // Game loop
-    let guess = Math.floor((min + max) / 2) // Binary Search
-    guessCount++
-    console.log(`\nI guess ${guess}!`)
-
-    let yesOrNo = await ask("Is that correct? ('Y' or 'N'): ")
-
-    // Check if user entered valid input
-    while(true) {
-      if (validateYesNo(yesOrNo, guess, secretNumber)) {
-        break
-      } 
-      yesOrNo = await ask("Please enter ('Y' or 'N'): ")
-    }
-
-    yesOrNo = yesOrNo.toLowerCase()
-    // ---------------------------------------------------------------------------------------------------------------
+  while (true) { // Play again loop
+    let secretNumber = await ask("What is your secret number (0-100)?\nI won't peek, I promise...\n");
     
-    if (yesOrNo.startsWith('n')) {
-      if (guess === parseInt(secretNumber)) { // Exits game when user cheats
-        console.log(`\n\n!!! CHEATING DETECTED! Goodbye.`)
-        break
+    // Check if user entered a valid number
+      while(true) {
+        if (isValidNumber(secretNumber)) {
+          break
+        }
+        secretNumber = await ask("Please enter a number (0-100): ")
       }
+    // ---------------------------------------------------------------------------------------------------------------
+    console.log('You entered: ' + secretNumber);
 
-      let highOrLow = await ask(`\nIs your number higher or lower than ${guess}?\nPlease enter ('H' or 'L'): `)
-      
+    // Initialize
+    let min = 0
+    let max = 100
+    let guessCount = 0
+    let isWin = false
+    // ---------------------------------------------------------------------------------------------------------------
+    while (guessCount < 7) { // Game loop
+      let guess = Math.floor((min + max) / 2) // Binary Search
+      guessCount++
+      console.log(`\nI guess ${guess}!`)
+
+      let yesOrNo = await ask("Is that correct? ('Y' or 'N'): ")
+
       // Check if user entered valid input
       while(true) {
-        if (validateHighLow(highOrLow, guess, secretNumber)) {
+        if (validateYesNo(yesOrNo, guess, secretNumber)) {
           break
         } 
-        highOrLow = await ask("Please enter ('H' or 'L'): ")
+        yesOrNo = await ask("Please enter ('Y' or 'N'): ")
       }
 
-      highOrLow = highOrLow.toLowerCase()
-    // ---------------------------------------------------------------------------------------------------------------
+      yesOrNo = yesOrNo.toLowerCase()
+      // ---------------------------------------------------------------------------------------------------------------
       
-      highOrLow.startsWith('h') // Updates the min/max values accordingly
-      ? min = guess + 1 
-      : max = guess - 1
+      if (yesOrNo.startsWith('n')) {
+        if (guess === parseInt(secretNumber)) { // Exits game when user cheats
+          console.log(`\n\n!!! CHEATING DETECTED! Goodbye.`)
+          break
+        }
 
-    } else { // Only reaches this point if computer has actually guessed the user's number
-      console.log("\nYAY I GUESSED YOUR NUMBER!\nThank you for playing :)")
-      isWin = true
+        let highOrLow = await ask(`\nIs your number higher or lower than ${guess}?\nPlease enter ('H' or 'L'): `)
+        
+        // Check if user entered valid input
+        while(true) {
+          if (validateHighLow(highOrLow, guess, secretNumber)) {
+            break
+          } 
+          highOrLow = await ask("Please enter ('H' or 'L'): ")
+        }
+
+        highOrLow = highOrLow.toLowerCase()
+      // ---------------------------------------------------------------------------------------------------------------
+        
+        highOrLow.startsWith('h') // Updates the min/max values accordingly
+        ? min = guess + 1 
+        : max = guess - 1
+
+      } else { // Only reaches this point if computer has actually guessed the user's number
+        console.log("\nYAY I GUESSED YOUR NUMBER!\nThank you for playing :)")
+        isWin = true
+        break
+      }
+    } // End of game loop ------------------------
+
+  if (!isWin) { // If the computer did not guess the user's number within 7 guesses
+    console.log(`\nSorry, I couldn't guess your number :(`)
+  }
+
+  // Asks if user wants to play again
+  playAgain = await ask("\nWould you like to play again? ('Y' or 'N'): ")
+  while (true) {
+    if (validateYesNo(playAgain, 0, 0)) {
       break
+    } else {
+      playAgain = await ask("Please enter ('Y' or 'N'): ")
     }
   }
 
-    if (!isWin) { // If the computer did not guess the user's number within 7 guesses
-      console.log(`\nSorry, I couldn't guess your number :(`)
-    }
-
+  if (playAgain.startsWith('n')) {
+    break
+  }
+  // --------------------------------------------------------------------------------------------------------------- 
+} // End of play again loop
   process.exit()
 }
 
