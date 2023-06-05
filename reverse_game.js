@@ -18,12 +18,12 @@ function checkGuessCount(guessCount, secretNumber) { // Check if user reached gu
 
 function checkValidGuess(guess, storeHigherLower, storedGuesses) { // Check if user followed computer's directions
   let lastGuess = storedGuesses[storedGuesses.length - 1]
-  let lasthOrL = storeHigherLower[storeHigherLower.length - 1]
+  let lastHOrL = storeHigherLower[storeHigherLower.length - 1]
 
-  if (guess < lastGuess && (lasthOrL === 'h')) {
+  if (guess < lastGuess && (lastHOrL === 'h')) {
     console.log('\n!!! Not valid! I said HIGHER!')
     return true
-  } else if (guess > lastGuess && lasthOrL === 'l') {
+  } else if (guess > lastGuess && lastHOrL === 'l') {
     console.log('\n!!! Not valid! I said LOWER!')
     return true
   } else {

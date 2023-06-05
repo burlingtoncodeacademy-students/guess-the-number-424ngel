@@ -97,6 +97,7 @@ async function start() {
       if (yesOrNo.startsWith('n')) {
         if (guess === parseInt(secretNumber)) { // Exits game when user cheats
           console.log(`\n\n!!! CHEATING DETECTED! Goodbye.`)
+          isWin = true // Set this so that the computer doesn't say "I couldn't guess your number"
           break
         }
 
@@ -118,7 +119,7 @@ async function start() {
         : max = guess - 1
 
       } else { // Only reaches this point if computer has actually guessed the user's number
-        console.log("\nYAY I GUESSED YOUR NUMBER!\nThank you for playing :)")
+        console.log(`\nYAY!\nIT TOOK ME ${guessCount} GUESSES TO GUESS YOUR NUMBER!\nThank you for playing :)`)
         isWin = true
         break
       }
